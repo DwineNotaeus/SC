@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
-namespace ServiciosSC.Core.Entities
+namespace ServiciosSC.Core.DTOs
 {
-    public partial class Client
+    public class ClientDTO
     {
-        public Client()
-        {
-            CreditByClient = new HashSet<CreditByClient>();
-        }
-
-        public int ClienteId { get; set; }
         public string Nombres { get; set; }
         public string Apellidos { get; set; }
         public string NumeroCelular { get; set; }
@@ -19,8 +14,5 @@ namespace ServiciosSC.Core.Entities
         public string NumeroIdentificacion { get; set; }
         public string DireccionResidencia { get; set; }
         public string Ubicacion { get; set; }
-
-        public virtual IdentificationType TipoIdentificacion { get; set; }
-        public virtual ICollection<CreditByClient> CreditByClient { get; set; }
     }
 }

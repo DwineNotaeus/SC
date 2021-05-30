@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using ServiciosSC.Core.DTOs;
+using ServiciosSC.Core.Entities;
 using ServiciosSC.Core.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -13,8 +15,8 @@ namespace ServiciosSC.API.Controllers
     [ApiController]
     public class CreditController : ControllerBase
     {
-        private readonly ICredit _credit;
-        public CreditController(ICredit credit)
+        private readonly ICreditService _credit;
+        public CreditController(ICreditService credit)
         {
             _credit = credit;
         }
@@ -35,17 +37,20 @@ namespace ServiciosSC.API.Controllers
             return Ok(post);
         }
 
-        // GET api/<CreditController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+
+        [HttpGet("getTypeDocument")]
+        public async Task<IEnumerable<IdentificationTypeDTO>> GetListTypeContact()
         {
-            return "value";
+             return await _credit.GetListTypeDocument();
+            
         }
 
         // POST api/<CreditController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost("createCredits")]
+        public async Task<IActionResult> createCredits([FromBody] CreditByClientDTO model)
         {
+            await _credit.CreateCredit(model);
+            return Ok(model);
         }
 
         // PUT api/<CreditController>/5

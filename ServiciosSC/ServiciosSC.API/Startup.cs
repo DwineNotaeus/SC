@@ -1,17 +1,16 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using ServiciosSC.Core.Interfaces;
+using ServiciosSC.Core.Repositories;
+using ServiciosSC.Core.Services;
+using ServiciosSC.Infrastructure.Data;
 using ServiciosSC.Infrastructure.Repositories;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ServiciosSC.API
 {
@@ -27,9 +26,24 @@ namespace ServiciosSC.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddControllers();
 
-            services.AddTransient<ICredit, Credit>();
+            services.AddDbContext<SCContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DbSC")));
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                "CorsPolicy",
+                builder => builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+            });
+
+            services.AddTransient<ICreditService, CreditService>();
+            services.AddTransient<ICredit, CreditRepository>();
+            services.AddTransient<IClientRepository, ClientRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,6 +57,8 @@ namespace ServiciosSC.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors("CorsPolicy");
 
             app.UseAuthorization();
 

@@ -5,15 +5,11 @@ using System.Threading.Tasks;
 
 namespace ServiciosSC.Core.Interfaces
 {
-    public interface ICredit
+    public interface ICreditService
     {
-        Task CreateCredit(CreditByClientDTO model, bool status);
-        Task<IEnumerable<IdentificationTypeDTO>> GetListTypeDocument();
-
-
-
-
         IEnumerable<string> GetListOfAllCredits();
+        Task CreateCredit(CreditByClientDTO model);
 
+        Task<IEnumerable<IdentificationTypeDTO>> GetListTypeDocument();
     }
 }
